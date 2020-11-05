@@ -7485,6 +7485,8 @@ class Compiler
         return new Number($hsl[3], '%');
     }
 
+    /*
+     * Todo : a integrer dans le futur module color
     protected static $libHwb = [
         ['channels'],
         ['hue', 'whiteness', 'blackness'],
@@ -7607,6 +7609,7 @@ class Compiler
 
         return new Number($hwb[3], '%');
     }
+    */
 
     protected function adjustHsl($color, $idx, $amount)
     {
