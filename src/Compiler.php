@@ -209,6 +209,11 @@ class Compiler
     protected $cache;
 
     /**
+     * @var bool
+     */
+    protected $cacheCheckImportResolutions = false;
+
+    /**
      * @var int
      */
     protected $indentLevel;
@@ -291,6 +296,9 @@ class Compiler
 
         if ($cacheOptions) {
             $this->cache = new Cache($cacheOptions);
+            if (!empty($cacheOptions['checkImportResolutions'])) {
+                $this->cacheCheckImportResolutions = true;
+            }
         }
 
         $this->stderr = fopen('php://stderr', 'w');
@@ -345,8 +353,11 @@ class Compiler
             $compileOptions = $this->getCompileOptions();
             $cache          = $this->cache->getCache('compile', $cacheKey, $compileOptions);
 
-            if (!empty($cache) && $cache instanceof CompilationResult && $cache->checkValid()) {
-                return $cache;
+            if (!empty($cache) && $cache instanceof CompilationResult) {
+                $cache->setIsCached(true);
+                if ($cache->checkValid($this->cacheCheckImportResolutions, $this)) {
+                    return $cache;
+                }
             }
         }
 
